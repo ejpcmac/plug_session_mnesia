@@ -9,7 +9,10 @@ defmodule PlugSessionMnesia.Store do
 
   @impl true
   def init(opts) do
-    Keyword.fetch!(opts, :table)
+    case Application.fetch_env(:plug_session_mnesia, :table) do
+      {:ok, table} -> table
+      :error -> Keyword.fetch!(opts, :table)
+    end
   end
 
   @impl true

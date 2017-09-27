@@ -12,6 +12,13 @@ defmodule PlugSessionMnesia.StoreTest do
     test "raises if the table is not provided" do
       assert_raise KeyError, fn -> init([]) end
     end
+
+    test "can fetch the table from the application environment" do
+      Application.put_env(:plug_session_mnesia, :table, @table)
+      assert init([]) == @table
+      assert init(table: :custom_table) == @table
+      Application.delete_env(:plug_session_mnesia, :table)
+    end
   end
 
   describe "get/3" do
