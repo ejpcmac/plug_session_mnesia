@@ -6,6 +6,7 @@ defmodule PlugSessionMnesia.Mixfile do
       app: :plug_session_mnesia,
       version: "0.1.0-dev",
       elixir: "~> 1.5",
+      elixirc_paths: elixirc_paths(Mix.env),
       start_permanent: Mix.env == :prod,
       deps: deps(),
       dialyzer: [
@@ -28,6 +29,10 @@ defmodule PlugSessionMnesia.Mixfile do
     ]
   end
 
+   # Specifies which paths to compile per environment.
+   defp elixirc_paths(:test), do: ["lib", "test/support"]
+   defp elixirc_paths(_),     do: ["lib"]
+
   defp deps do
     [
       {:credo, "~> 0.8.6", only: [:dev, :test], runtime: false},
@@ -35,6 +40,7 @@ defmodule PlugSessionMnesia.Mixfile do
       {:excoveralls, "~> 0.7.3", only: :test, runtime: false},
       {:mix_test_watch, "~> 0.5.0", only: :dev, runtime: false},
       {:ex_unit_notifier, "~> 0.1.4", only: :test, runtime: false},
+      {:plug, "~> 1.4", optional: true},
       {:ex_doc, "~> 0.16.4", only: :dev, runtime: false},
     ]
   end

@@ -1,18 +1,5 @@
 defmodule PlugSessionMnesia do
   @moduledoc """
-  Documentation for PlugSessionMnesia.
+  Application for storing and managing Plug sessions with Mnesia.
   """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> PlugSessionMnesia.hello
-      :world
-
-  """
-  def hello do
-    :world
-  end
 end
