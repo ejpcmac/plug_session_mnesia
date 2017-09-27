@@ -40,6 +40,12 @@ defmodule PlugSessionMnesia.StoreTest do
     test "returns a nil session if it does not exists in the store" do
       assert get(nil, @sid, @table) == {nil, %{}}
     end
+
+    test "raises if the table does not exists" do
+      assert_raise PlugSessionMnesia.TableNotExists, fn ->
+        get(nil, @sid, :unknown_table)
+      end
+    end
   end
 
   describe "put/4" do
@@ -56,6 +62,12 @@ defmodule PlugSessionMnesia.StoreTest do
       assert not is_nil(sid)
       assert [{_, ^sid, @data, _}] = lookup_session(sid)
     end
+
+    test "raises if the table does not exists" do
+      assert_raise PlugSessionMnesia.TableNotExists, fn ->
+        put(nil, @sid, @data, :unknown_table)
+      end
+    end
   end
 
   describe "delete/3" do
@@ -69,6 +81,12 @@ defmodule PlugSessionMnesia.StoreTest do
 
     test "works as well if the session does not exist" do
       assert :ok = delete(nil, @sid, @table)
+    end
+
+    test "raises if the table does not exists" do
+      assert_raise PlugSessionMnesia.TableNotExists, fn ->
+        delete(nil, @sid, :unknown_table)
+      end
     end
   end
 end
