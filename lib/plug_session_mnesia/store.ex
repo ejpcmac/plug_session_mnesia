@@ -1,6 +1,39 @@
 defmodule PlugSessionMnesia.Store do
   @moduledoc """
   Stores the session in a Mnesia table.
+
+  The store itself does not create the Mnesia table. It expects an existing
+  table to be passed as an argument. You can create it yourself following the
+  *Storage* section or use the helpers provided with this application (see
+  `PlugSessionMnesia` for more information).
+
+  Since this store uses Mnesia, the session can persist upon restarts and be
+  shared between nodes, depending on your configuration.
+
+  ## Options
+
+    * `:table` - Mnesia table name (required if not set in the application
+      environment).
+
+  ## Example
+
+      # If you want to create the Mnesia table yourself
+      :mnesia.create_schema([node()])
+      :mnesia.create_table(:session, [attributes: [:sid, :data, :timestamp], disc_copies: [node()]])
+
+      plug Plug.Session,
+        key: "_app_key",
+        store: PlugSessionMnesia.Store,
+        table: :session   # This table must exist.
+
+  ## Storage
+
+  The data is stored in Mnesia in the following format:
+
+      {sid :: String.t, data :: map, timestamp :: :erlang.timestamp}
+
+  The timestamp is updated on access to the session and is used by
+  `PlugSessionMnesia` to check if the session is still active.
   """
 
   @behaviour Plug.Session.Store
