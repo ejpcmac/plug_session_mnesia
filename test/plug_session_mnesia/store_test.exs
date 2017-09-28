@@ -9,14 +9,21 @@ defmodule PlugSessionMnesia.StoreTest do
       assert init(table: @table) == @table
     end
 
-    test "raises if the table is not provided" do
-      assert_raise KeyError, fn -> init([]) end
+    test "raises if the table is not provided as argument nor in the application
+          environment" do
+      Application.delete_env(:plug_session_mnesia, :table)
+      assert_raise PlugSessionMnesia.TableNotDefined, fn -> init([]) end
     end
 
     test "can fetch the table from the application environment" do
       Application.put_env(:plug_session_mnesia, :table, @table)
       assert init([]) == @table
-      assert init(table: :custom_table) == @table
+      Application.delete_env(:plug_session_mnesia, :table)
+    end
+
+    test "overrides the global table configuration" do
+      Application.put_env(:plug_session_mnesia, :table, @table)
+      assert init(table: :custom_table) == :custom_table
       Application.delete_env(:plug_session_mnesia, :table)
     end
   end

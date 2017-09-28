@@ -42,9 +42,11 @@ defmodule PlugSessionMnesia.Store do
 
   @impl true
   def init(opts) do
-    case Application.fetch_env(:plug_session_mnesia, :table) do
+    with :error <- Keyword.fetch(opts, :table),
+         :error <- Application.fetch_env(:plug_session_mnesia, :table) do
+      raise PlugSessionMnesia.TableNotDefined
+    else
       {:ok, table} -> table
-      :error -> Keyword.fetch!(opts, :table)
     end
   end
 
