@@ -30,3 +30,16 @@ defmodule PlugSessionMnesia.TableNotDefined do
     """
   end
 end
+
+defmodule PlugSessionMnesia.TableExists do
+  @moduledoc """
+  Error raised by `PlugSessionMnesia.init!/0` if a table already exists and has
+  different attributes.
+  """
+
+  defexception [:table]
+
+  def message(attrs) do
+    "The table #{attrs.table} already exists. Please choose another name."
+  end
+end
