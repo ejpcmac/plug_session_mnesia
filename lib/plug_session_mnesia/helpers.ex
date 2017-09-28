@@ -3,11 +3,8 @@ defmodule PlugSessionMnesia.Helpers do
   Helpers for creating the Mnesia table.
   """
 
-  @typedoc "Session persistence"
-  @type persistence :: :persistent | :volatile
-
-  @typedoc "Return value"
-  @type return_value :: :ok | {:error | :abort, term}
+  @typep persistence :: :persistent | :volatile
+  @typep return_value :: :ok | {:error | :abort, term}
 
   @doc """
   Sets the Mnesia table up for session storage according to the configuration.
@@ -21,7 +18,7 @@ defmodule PlugSessionMnesia.Helpers do
   Creates a Mnesia `table` for the session storage on the specified `nodes`.
   """
   @spec setup(atom) :: return_value
-  @spec setup(atom, persistence) :: return_value
+  @spec setup(atom, :persistent | :volatile) :: :ok | {:error | :abort, term}
   def setup(table, persistent? \\ :persistent)
       when is_atom(table) and persistent? in [:persistent, :volatile] do
     {:mnesia.start, persistent?}
@@ -30,7 +27,7 @@ defmodule PlugSessionMnesia.Helpers do
   end
 
   ##
-  ## Helpers
+  ## Private helpers
   ##
 
   @spec fetch_table_name! :: atom
@@ -60,7 +57,7 @@ defmodule PlugSessionMnesia.Helpers do
       status
     else
       [^node] -> status   # If the node is already in the disc_copies, alright!
-      other -> other
+      other -> {other, :persistent}
     end
   end
   defp create_schema(status), do: status

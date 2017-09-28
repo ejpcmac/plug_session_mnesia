@@ -16,7 +16,7 @@ defmodule PlugSessionMnesia.HelpersTest do
   defp reset_mnesia do
     :mnesia.stop
     :ok = :mnesia.delete_schema([node()])
-    File.rmdir("Mnesia.nonode@nohost")
+    File.rm_rf("Mnesia.nonode@nohost")
     :mnesia.start
   end
 
@@ -68,6 +68,18 @@ defmodule PlugSessionMnesia.HelpersTest do
         |> Path.join("test.DCD")
         |> File.exists?
       )
+    end
+
+    test "works if a persistent schema already exists" do
+      {:atomic, :ok} =
+        :mnesia.change_table_copy_type(:schema, node(), :disc_copies)
+
+      assert :ok = Helpers.setup(:test)
+    end
+
+    test "returns an error if the schema cannot be written on disk" do
+      File.touch("Mnesia.nonode@nohost")
+      assert {:aborted, _} = Helpers.setup(:test)
     end
 
     test "returns {:error | :aborted, reason} if an error occured" do
