@@ -1,6 +1,10 @@
 defmodule PlugSessionMnesia.Helpers do
   @moduledoc """
   Helpers for creating the Mnesia table.
+
+  You can use the functions in this module to create the Mnesia table used by
+  `PlugSessionMnesia.Store` on the current node. If you want more advanced
+  features like distribution, you should create the table yourself.
   """
 
   @typep persistence :: :persistent | :volatile
@@ -8,6 +12,18 @@ defmodule PlugSessionMnesia.Helpers do
 
   @doc """
   Sets the Mnesia table up for session storage according to the configuration.
+
+  For this function to work, `:table` must be set in your `config.exs`:
+
+      config :plug_session_mnesia,
+        table: :session
+
+  It then creates a Mnesia table with copies in RAM and on disk, so that
+  sessions are persistent accross application reboots. For more information
+  about the process, see `setup/2`.
+
+  If the table already exists *with different attributes*, a
+  `PlugSessionMnesia.TableExists` is raised.
   """
   @spec setup! :: :ok
   def setup! do
@@ -15,7 +31,32 @@ defmodule PlugSessionMnesia.Helpers do
   end
 
   @doc """
-  Creates a Mnesia `table` for the session storage on the specified `nodes`.
+  Creates a Mnesia table for the session storage.
+
+  ## Parameters
+
+  * `table` - Mnesia table name
+  * `persistent?` - persistence mode. `:persistent` automatically sets the
+    schema and the table to keep a copy of their data in both RAM and disk.
+    `:volatile` lets the schema copy mode untouched and creates a RAM-only
+    session store.
+
+  ## Return values
+
+  * `:ok` - the table has been successfully created
+  * `{:error, :already_exists}` - a table with the same name but different
+    attribute already exists. If the table has the correct attributes, there is
+    no error.
+  * Any other error from Mnesia
+
+  ## Examples
+
+      iex> PlugSessionMnesia.Helpers.setup(:session)
+      :ok
+      iex> :mnesia.create_table(:test, [attributes: [:id, :data]])
+      {:atomic, :ok}
+      iex> PlugSessionMnesia.Helpers.setup(:test)
+      {:error, already_exists}
   """
   @spec setup(atom) :: return_value
   @spec setup(atom, :persistent | :volatile) :: :ok | {:error | :abort, term}
