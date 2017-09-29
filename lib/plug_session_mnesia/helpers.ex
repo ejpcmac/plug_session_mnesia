@@ -11,7 +11,7 @@ defmodule PlugSessionMnesia.Helpers do
   @typep return_value :: :ok | {:error | :abort, term}
 
   @doc """
-  Sets the Mnesia table up for session storage according to the configuration.
+  Sets up the Mnesia table for session storage according to the configuration.
 
   For this function to work, `:table` must be set in your `config.exs`:
 

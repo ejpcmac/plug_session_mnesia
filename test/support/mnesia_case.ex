@@ -23,6 +23,23 @@ defmodule PlugSessionMnesia.MnesiaCase do
         :ok
       end
 
+      defp with_env(_attrs) do
+        Application.put_env(:plug_session_mnesia, :table, @table)
+        reset_mnesia()
+
+        on_exit fn ->
+          Application.delete_env(:plug_session_mnesia, :table)
+          reset_mnesia()
+        end
+      end
+
+      defp reset_mnesia do
+        :mnesia.stop
+        :ok = :mnesia.delete_schema([node()])
+        File.rm_rf("Mnesia.nonode@nohost")
+        :mnesia.start
+      end
+
       defp session_fixture do
         session = {@table, @sid, @data, :os.timestamp}
 
