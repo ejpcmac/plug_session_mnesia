@@ -12,7 +12,7 @@ defmodule PlugSessionMnesia.Mixfile do
       dialyzer: [
         plt_add_deps: :transitive,
         flags: [:unmatched_returns, :error_handling, :race_conditions],
-        ignore_warnings: ".dialyzer-ignore",
+        ignore_warnings: ".dialyzer_ignore",
       ],
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
@@ -35,13 +35,18 @@ defmodule PlugSessionMnesia.Mixfile do
 
   defp deps do
     [
+      # Development and test dependencies
       {:credo, "~> 0.8.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5.1", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7.3", only: :test, runtime: false},
       {:mix_test_watch, "~> 0.5.0", only: :dev, runtime: false},
       {:ex_unit_notifier, "~> 0.1.4", only: :test, runtime: false},
+
+      # Project dependencies
       {:plug, "~> 1.4", optional: true},
-      {:ex_doc, "~> 0.16.4", only: :dev, runtime: false},
+
+      # Documentation dependencies
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
     ]
   end
 end

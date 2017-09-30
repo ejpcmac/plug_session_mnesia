@@ -10,7 +10,8 @@ defmodule PlugSessionMnesia.HelpersTest do
     test "creates a Mnesia schema and table according to the configuration" do
       assert :ok = Helpers.setup!
       assert {:aborted, {:already_exists, _}} = :mnesia.create_table(@table, [])
-      assert :mnesia.table_info(@table, :attributes) == [:sid, :data, :timestamp]
+      assert :mnesia.table_info(@table, :attributes) ==
+        [:sid, :data, :timestamp]
     end
 
     test "raises if the table name is not provided in the configuration" do
@@ -39,7 +40,8 @@ defmodule PlugSessionMnesia.HelpersTest do
     test "creates a Mnesia schema and table and returns :ok if it’s all good" do
       assert :ok = Helpers.setup(@table)
       assert {:aborted, {:already_exists, _}} = :mnesia.create_table(@table, [])
-      assert :mnesia.table_info(@table, :attributes) == [:sid, :data, :timestamp]
+      assert :mnesia.table_info(@table, :attributes) ==
+        [:sid, :data, :timestamp]
     end
 
     test "can create a persistent table" do

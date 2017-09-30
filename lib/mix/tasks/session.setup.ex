@@ -37,17 +37,15 @@ defmodule Mix.Tasks.Session.Setup do
 
   @spec run(OptionParser.argv) :: boolean
   def run(_argv) do
-    try do
-      PlugSessionMnesia.Helpers.setup!
-      table = Application.fetch_env!(:plug_session_mnesia, :table)
-      Mix.shell.info IO.ANSI.green <> "The Mnesia table '#{table}' has been " <>
-      "successfully set up for session storage!"
-    rescue
-      e in PlugSessionMnesia.TableNotDefined ->
-        Mix.shell.error PlugSessionMnesia.TableNotDefined.message(e)
+    PlugSessionMnesia.Helpers.setup!
+    table = Application.fetch_env!(:plug_session_mnesia, :table)
+    Mix.shell.info IO.ANSI.green <> "The Mnesia table '#{table}' has been " <>
+    "successfully set up for session storage!"
+  rescue
+    e in PlugSessionMnesia.TableNotDefined ->
+      Mix.shell.error PlugSessionMnesia.TableNotDefined.message(e)
 
-      e in PlugSessionMnesia.TableExists ->
-        Mix.shell.error PlugSessionMnesia.TableExists.message(e)
-      end
-  end
+    e in PlugSessionMnesia.TableExists ->
+      Mix.shell.error PlugSessionMnesia.TableExists.message(e)
+    end
 end
