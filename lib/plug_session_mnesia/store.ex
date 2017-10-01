@@ -20,6 +20,7 @@ defmodule PlugSessionMnesia.Store do
       # If you want to create the Mnesia table yourself
       :mnesia.create_schema([node()])
       :mnesia.create_table(:session, [attributes: [:sid, :data, :timestamp], disc_copies: [node()]])
+      :mnesia.add_table_index(:session, :timestamp)
 
       plug Plug.Session,
         key: "_app_key",
@@ -28,12 +29,13 @@ defmodule PlugSessionMnesia.Store do
 
   ## Storage
 
-  The data is stored in Mnesia in the following format:
+  The data is stored in Mnesia in the following format, where `timestamp` is the
+  OS UNIX time in nanoseconds:
 
-      {sid :: String.t, data :: map, timestamp :: :erlang.timestamp}
+      {sid :: String.t, data :: map, timestamp :: integer}
 
   The timestamp is updated on access to the session and is used by
-  `PlugSessionMnesia` to check if the session is still active.
+  `PlugSessionMnesia.Cleaner` to check if the session is still active.
   """
 
   @behaviour Plug.Session.Store
@@ -81,8 +83,7 @@ defmodule PlugSessionMnesia.Store do
     end
   end
 
-  @spec lookup_session!(atom, String.t) ::
-    [{atom, String.t, map, :erlang.timestamp}]
+  @spec lookup_session!(atom, String.t) :: [{atom, String.t, map, integer}]
   defp lookup_session!(table, sid) do
     t = fn ->
       :mnesia.read({table, sid})
@@ -97,7 +98,7 @@ defmodule PlugSessionMnesia.Store do
   @spec put_session!(atom, String.t, map) :: nil
   defp put_session!(table, sid, data) do
     t = fn ->
-      :mnesia.write({table, sid, data, :os.timestamp})
+      :mnesia.write({table, sid, data, System.os_time(:nanoseconds)})
     end
 
     case :mnesia.transaction(t) do
