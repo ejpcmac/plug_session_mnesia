@@ -20,7 +20,8 @@ defmodule PlugSessionMnesia.Cleaner do
   Returns `{:error, :bad_configuration}` otherwise.
   """
   @spec start_link :: GenServer.on_start
-  def start_link do
+  @spec start_link(term) :: GenServer.on_start
+  def start_link(_args \\ nil) do
     with {:ok, table} <- Application.fetch_env(@app, :table),
          {:ok, max_age} <- Application.fetch_env(@app, :max_age) do
       timeout = Application.get_env(:plug_session_mnesia, :cleaner_timeout, 60)

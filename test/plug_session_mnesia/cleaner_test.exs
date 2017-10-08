@@ -4,7 +4,7 @@ defmodule PlugSessionMnesia.CleanerTest do
 
   alias PlugSessionMnesia.Cleaner
 
-  describe "start_link/2" do
+  describe "start_link/1" do
     setup [:reset_env_on_exit]
 
     test "starts the GenServer if all mandatory configuration is provided" do
@@ -16,6 +16,7 @@ defmodule PlugSessionMnesia.CleanerTest do
 
     test "fails with an error if the Mnesia table is not provided in the
           configuration" do
+      Application.delete_env(:plug_session_mnesia, :table)
       Application.put_env(:plug_session_mnesia, :max_age, 1)
       assert {:error, :bad_configuration} = Cleaner.start_link
     end
@@ -23,6 +24,7 @@ defmodule PlugSessionMnesia.CleanerTest do
     test "fails with an error if the maximum session age is not provided in the
           configuration" do
       Application.put_env(:plug_session_mnesia, :table, @table)
+      Application.delete_env(:plug_session_mnesia, :max_age)
       assert {:error, :bad_configuration} = Cleaner.start_link
     end
   end

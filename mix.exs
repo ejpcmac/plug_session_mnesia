@@ -25,6 +25,7 @@ defmodule PlugSessionMnesia.Mixfile do
 
   def application do
     [
+      mod: {PlugSessionMnesia, []},
       extra_applications: [:mnesia, :logger]
     ]
   end
