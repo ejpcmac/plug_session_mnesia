@@ -1,6 +1,5 @@
 defmodule PlugSessionMnesia.CleanerTest do
-  use ExUnit.Case
-  use PlugSessionMnesia.MnesiaCase
+  use PlugSessionMnesia.TestCase
 
   alias PlugSessionMnesia.Cleaner
 
@@ -8,29 +7,29 @@ defmodule PlugSessionMnesia.CleanerTest do
     setup [:reset_env_on_exit]
 
     test "starts the GenServer if all mandatory configuration is provided" do
-      Application.put_env(:plug_session_mnesia, :table, @table)
-      Application.put_env(:plug_session_mnesia, :max_age, 1)
+      Application.put_env(@app, :table, @table)
+      Application.put_env(@app, :max_age, 1)
 
       assert {:ok, _} = Cleaner.start_link
     end
 
     test "fails with an error if the Mnesia table is not provided in the
           configuration" do
-      Application.delete_env(:plug_session_mnesia, :table)
-      Application.put_env(:plug_session_mnesia, :max_age, 1)
+      Application.delete_env(@app, :table)
+      Application.put_env(@app, :max_age, 1)
       assert {:error, :bad_configuration} = Cleaner.start_link
     end
 
     test "fails with an error if the maximum session age is not provided in the
           configuration" do
-      Application.put_env(:plug_session_mnesia, :table, @table)
-      Application.delete_env(:plug_session_mnesia, :max_age)
+      Application.put_env(@app, :table, @table)
+      Application.delete_env(@app, :max_age)
       assert {:error, :bad_configuration} = Cleaner.start_link
     end
   end
 
   describe "clean_sessions/2" do
-    setup [:reset_table]
+    setup [:reset_mnesia_table]
 
     test "cleans old sessions" do
       now = System.os_time
@@ -53,12 +52,12 @@ defmodule PlugSessionMnesia.CleanerTest do
   end
 
   describe "the cleaner GenServer" do
-    setup [:reset_table, :reset_env_on_exit]
+    setup [:reset_mnesia_table, :reset_env_on_exit]
 
     test "triggers session cleaning after timeout" do
-      Application.put_env(:plug_session_mnesia, :table, @table)
-      Application.put_env(:plug_session_mnesia, :max_age, 1)
-      Application.put_env(:plug_session_mnesia, :cleaner_timeout, 1)
+      Application.put_env(@app, :table, @table)
+      Application.put_env(@app, :max_age, 1)
+      Application.put_env(@app, :cleaner_timeout, 1)
 
       now = System.os_time
       two_sec_ago = now - System.convert_time_unit(2, :seconds, :native)
@@ -74,8 +73,8 @@ defmodule PlugSessionMnesia.CleanerTest do
 
   defp reset_env_on_exit(_) do
     on_exit fn ->
-      Application.delete_env(:plug_session_mnesia, :table)
-      Application.delete_env(:plug_session_mnesia, :max_age)
+      Application.delete_env(@app, :table)
+      Application.delete_env(@app, :max_age)
     end
   end
 end

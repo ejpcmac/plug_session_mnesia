@@ -1,6 +1,5 @@
 defmodule PlugSessionMnesia.StoreTest do
-  use ExUnit.Case
-  use PlugSessionMnesia.MnesiaCase
+  use PlugSessionMnesia.TestCase
 
   import PlugSessionMnesia.Store
 
@@ -11,25 +10,25 @@ defmodule PlugSessionMnesia.StoreTest do
 
     test "raises if the table is not provided as argument nor in the application
           environment" do
-      Application.delete_env(:plug_session_mnesia, :table)
+      Application.delete_env(@app, :table)
       assert_raise PlugSessionMnesia.TableNotDefined, fn -> init([]) end
     end
 
     test "can fetch the table from the application environment" do
-      Application.put_env(:plug_session_mnesia, :table, @table)
+      Application.put_env(@app, :table, @table)
       assert init([]) == @table
-      Application.delete_env(:plug_session_mnesia, :table)
+      Application.delete_env(@app, :table)
     end
 
     test "overrides the global table configuration" do
-      Application.put_env(:plug_session_mnesia, :table, @table)
+      Application.put_env(@app, :table, @table)
       assert init(table: :custom_table) == :custom_table
-      Application.delete_env(:plug_session_mnesia, :table)
+      Application.delete_env(@app, :table)
     end
   end
 
   describe "get/3" do
-    setup [:reset_table]
+    setup [:reset_mnesia_table]
 
     test "gets the session from the store if it exists" do
       session_fixture()
@@ -56,7 +55,7 @@ defmodule PlugSessionMnesia.StoreTest do
   end
 
   describe "put/4" do
-    setup [:reset_table]
+    setup [:reset_mnesia_table]
 
     test "puts the session in the store if it exists" do
       session_fixture()
@@ -78,7 +77,7 @@ defmodule PlugSessionMnesia.StoreTest do
   end
 
   describe "delete/3" do
-    setup [:reset_table]
+    setup [:reset_mnesia_table]
 
     test "deletes the session from the store if it exists" do
       session_fixture()

@@ -1,12 +1,11 @@
 Mix.shell(Mix.Shell.Process)
 
 defmodule Mix.Tasks.Session.SetupTest do
-  use ExUnit.Case
-  use PlugSessionMnesia.MnesiaCase
+  use PlugSessionMnesia.TestCase
 
   import Mix.Tasks.Session.Setup
 
-  setup [:with_env]
+  setup [:mnesia, :with_env]
 
   describe "run/1" do
     test "creates a Mnesia schema and table according to the configuration" do
@@ -19,7 +18,7 @@ defmodule Mix.Tasks.Session.SetupTest do
 
     test "prints an error message if the table name is not provided in the
           configuration" do
-      Application.delete_env(:plug_session_mnesia, :table)
+      Application.delete_env(@app, :table)
       run([])
 
       assert_received {:mix_shell, :error, [msg]}

@@ -1,10 +1,9 @@
 defmodule PlugSessionMnesia.HelpersTest do
-  use ExUnit.Case
-  use PlugSessionMnesia.MnesiaCase
+  use PlugSessionMnesia.TestCase
 
   alias PlugSessionMnesia.Helpers
 
-  setup [:with_env]
+  setup [:mnesia, :with_env]
 
   describe "setup!/0" do
     test "creates a Mnesia schema and table according to the configuration" do
@@ -15,7 +14,7 @@ defmodule PlugSessionMnesia.HelpersTest do
     end
 
     test "raises if the table name is not provided in the configuration" do
-      Application.delete_env(:plug_session_mnesia, :table)
+      Application.delete_env(@app, :table)
 
       assert_raise PlugSessionMnesia.TableNotDefined, fn ->
         Helpers.setup!

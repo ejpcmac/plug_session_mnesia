@@ -1,16 +1,21 @@
-defmodule PlugSessionMnesia.MnesiaCase do
+defmodule PlugSessionMnesia.TestCase do
   @moduledoc """
-  A module for supporting Mnesia requests in the tests.
+  A test case for `PlugSessionMnesia`.
+
+  This module provides helpers for testing the application.
   """
 
-  defmacro __using__(_opts) do
+  use ExUnit.CaseTemplate
+
+  using do
     quote do
+      @app :plug_session_mnesia
       @table :session_test
       @sid "test_session"
       @data %{key: "value"}
       @new_data %{key: "new_value"}
 
-      defp reset_table(_attrs) do
+      defp reset_mnesia_table(_attrs) do
         case :mnesia.clear_table(@table) do
           {:aborted, {:no_exists, _}} ->
             :mnesia.create_table(@table, [
@@ -23,14 +28,14 @@ defmodule PlugSessionMnesia.MnesiaCase do
         :ok
       end
 
-      defp with_env(_attrs) do
-        Application.put_env(:plug_session_mnesia, :table, @table)
+      defp mnesia(_attrs) do
         reset_mnesia()
+        on_exit fn -> reset_mnesia() end
+      end
 
-        on_exit fn ->
-          Application.delete_env(:plug_session_mnesia, :table)
-          reset_mnesia()
-        end
+      defp with_env(_attrs) do
+        Application.put_env(@app, :table, @table)
+        on_exit fn -> Application.delete_env(@app, :table) end
       end
 
       defp reset_mnesia do
@@ -42,19 +47,12 @@ defmodule PlugSessionMnesia.MnesiaCase do
 
       defp session_fixture do
         session = {@table, @sid, @data, System.os_time}
-
-        {:atomic, :ok} = :mnesia.transaction fn ->
-          :mnesia.write(session)
-        end
-
+        :ok = :mnesia.dirty_write(session)
         session
       end
 
       defp lookup_session(sid \\ @sid) do
-        {:atomic, session} = :mnesia.transaction fn ->
-          :mnesia.read({@table, sid})
-        end
-        session
+        :mnesia.dirty_read({@table, sid})
       end
     end
   end

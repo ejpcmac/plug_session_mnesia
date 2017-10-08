@@ -1,7 +1,6 @@
 defmodule PlugSessionMnesia.IntegrationTest do
-  use ExUnit.Case
+  use PlugSessionMnesia.TestCase
   use Plug.Test
-  use PlugSessionMnesia.MnesiaCase
 
   @opts [
     key: "_test_key",
@@ -9,7 +8,7 @@ defmodule PlugSessionMnesia.IntegrationTest do
     table: :session_test,
   ]
 
-  setup [:reset_table]
+  setup [:reset_mnesia_table]
 
   test "session creation works" do
     conn =
