@@ -41,7 +41,7 @@ defmodule PlugSessionMnesia.MnesiaCase do
       end
 
       defp session_fixture do
-        session = {@table, @sid, @data, System.os_time(:nanoseconds)}
+        session = {@table, @sid, @data, System.os_time}
 
         {:atomic, :ok} = :mnesia.transaction fn ->
           :mnesia.write(session)

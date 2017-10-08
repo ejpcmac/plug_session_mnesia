@@ -30,7 +30,7 @@ defmodule PlugSessionMnesia.Store do
   ## Storage
 
   The data is stored in Mnesia in the following format, where `timestamp` is the
-  OS UNIX time in nanoseconds:
+  OS UNIX time in the `:native` unit:
 
       {sid :: String.t, data :: map, timestamp :: integer}
 
@@ -98,7 +98,7 @@ defmodule PlugSessionMnesia.Store do
   @spec put_session!(atom, String.t, map) :: nil
   defp put_session!(table, sid, data) do
     t = fn ->
-      :mnesia.write({table, sid, data, System.os_time(:nanoseconds)})
+      :mnesia.write({table, sid, data, System.os_time})
     end
 
     case :mnesia.transaction(t) do
