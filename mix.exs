@@ -46,11 +46,11 @@ defmodule PlugSessionMnesia.Mixfile do
   defp deps do
     [
       # Development and test dependencies
-      {:credo, "~> 0.8.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 0.5.1", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.7.3", only: :test, runtime: false},
-      {:mix_test_watch, "~> 0.5.0", only: :dev, runtime: false},
-      {:ex_unit_notifier, "~> 0.1.4", only: :test, runtime: false},
+      {:credo, "~> 0.8.8", only: [:dev, :test], runtime: false},
+      {:dialyxir, ">= 0.0.0", only: [:dev, :test], runtime: false},
+      {:excoveralls, ">= 0.0.0", only: :test, runtime: false},
+      {:mix_test_watch, ">= 0.0.0", only: :dev, runtime: false},
+      {:ex_unit_notifier, ">= 0.0.0", only: :test, runtime: false},
 
       # Project dependencies
       {:plug, "~> 1.4", optional: true},
