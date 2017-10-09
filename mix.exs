@@ -1,10 +1,13 @@
 defmodule PlugSessionMnesia.Mixfile do
   use Mix.Project
 
+  @version "0.1.0-dev"
+  @repo_url "https://github.com/ejpcmac/plug_session_mnesia"
+
   def project do
     [
       app: :plug_session_mnesia,
-      version: "0.1.0-dev",
+      version: @version,
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env),
       start_permanent: Mix.env == :prod,
@@ -19,6 +22,12 @@ defmodule PlugSessionMnesia.Mixfile do
         "coveralls": :test,
         "coveralls.detail": :test,
         "coveralls.html": :test,
+      ],
+
+      docs: [
+        main: "PlugSessionMnesia",
+        source_url: @repo_url,
+        source_ref: "v#{@version}",
       ],
     ]
   end
