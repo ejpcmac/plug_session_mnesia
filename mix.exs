@@ -1,7 +1,7 @@
 defmodule PlugSessionMnesia.Mixfile do
   use Mix.Project
 
-  @version "0.1.0-dev"
+  @version "0.1.0"
   @repo_url "https://github.com/ejpcmac/plug_session_mnesia"
 
   def project do
@@ -29,6 +29,11 @@ defmodule PlugSessionMnesia.Mixfile do
         source_url: @repo_url,
         source_ref: "v#{@version}",
       ],
+
+      package: package(),
+      description: """
+      An application for storing and managing Plug sessions with Mnesia.
+      """,
     ]
   end
 
@@ -57,6 +62,14 @@ defmodule PlugSessionMnesia.Mixfile do
 
       # Documentation dependencies
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: ["Jean-Philippe Cugnet"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => @repo_url},
     ]
   end
 end

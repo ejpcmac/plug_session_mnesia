@@ -1,5 +1,7 @@
 # plug_session_mnesia
 
+[![hex.pm version](http://img.shields.io/hexpm/v/plug_session_mnesia.svg?style=flat)](https://hex.pm/packages/plug_session_mnesia)
+
 An application for storing and managing Plug sessions with Mnesia.
 
 This application provides a `Plug.Session.Store` using Mnesia as back-end, and
@@ -56,3 +58,9 @@ task to be run in a release environment.
 
 Before contributing to this project, please read the
 [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+Copyright © 2017 Jean-Philippe Cugnet
+
+This project is licensed under the [MIT license](LICENSE).
