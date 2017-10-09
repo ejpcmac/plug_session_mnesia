@@ -56,3 +56,9 @@ task to be run in a release environment.
 
 Before contributing to this project, please read the
 [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+Copyright © 2017 Jean-Philippe Cugnet
+
+This project is licensed under the [MIT license](LICENSE).
