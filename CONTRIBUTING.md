@@ -17,7 +17,7 @@ The `master` branch is reserved to releases: the development process occurs on
 
 3. Add the main repository as a remote:
 
-        $ git remote add upstream https://github.com/jpc/plug_session_mnesia.git
+        $ git remote add upstream https://github.com/ejpcmac.net/plug_session_mnesia.git
 
 4. Checkout to `develop`:
 

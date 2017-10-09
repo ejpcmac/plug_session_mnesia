@@ -2,7 +2,7 @@ defmodule PlugSessionMnesia do
   @moduledoc """
   An application for storing and managing Plug sessions with Mnesia.
 
-  This application provides a `Plug.Session.Store` using Mnesia as backend, and
+  This application provides a `Plug.Session.Store` using Mnesia as back-end, and
   a session cleaner for automatically deleting inactive sessions. It also
   provide helpers for creating the Mnesia table.
 
