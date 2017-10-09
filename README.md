@@ -1,5 +1,7 @@
 # plug_session_mnesia
 
+[![hex.pm version](http://img.shields.io/hexpm/v/plug_session_mnesia.svg?style=flat)](https://hex.pm/packages/plug_session_mnesia)
+
 An application for storing and managing Plug sessions with Mnesia.
 
 This application provides a `Plug.Session.Store` using Mnesia as back-end, and
