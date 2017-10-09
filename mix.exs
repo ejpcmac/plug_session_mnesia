@@ -68,7 +68,7 @@ defmodule PlugSessionMnesia.Mixfile do
   defp package do
     [
       maintainers: ["Jean-Philippe Cugnet"],
-      licences: ["MIT"],
+      licenses: ["MIT"],
       links: %{"GitHub" => @repo_url},
     ]
   end
