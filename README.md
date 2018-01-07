@@ -4,9 +4,9 @@
 
 An application for storing and managing Plug sessions with Mnesia.
 
-This application provides a `Plug.Session.Store` using Mnesia as back-end, and
-a session cleaner for automatically deleting inactive sessions. It also
-provide helpers for creating the Mnesia table.
+This application provides a `Plug.Session.Store` using Mnesia as back-end, and a
+session cleaner for automatically deleting inactive sessions. It also provide
+helpers for creating the Mnesia table.
 
 Using Mnesia enables session persistence between application reboots and
 distribution. However, distribution is not yet supported out of the box by the
@@ -26,14 +26,17 @@ Then, add to your configuration:
 ```elixir
 config :plug_session_mnesia,
   table: :session,
-  max_age: 86400
+  max_age: 86_400
 ```
 
-It will store the sessions in a Mnesia table named `session` and discard them
-if they are inactive for more than 1 day. By default,
-`PlugSessionMnesia.Cleaner` checks every minute for outdated sessions. You can
-change this behaviour by setting the `:cleaner_timeout` key in the
-configuration with a value in seconds.
+It will store the sessions in a Mnesia table named `session` and discard them if
+they are inactive for more than 1 day. You can also choose to discard sessions
+after a given amount of time, regardless they have been active or not. To do
+this, simply add `timestamp: :fixed` to the configuration.
+
+By default, `PlugSessionMnesia.Cleaner` checks every minute for outdated
+sessions. You can change this behaviour by setting the `:cleaner_timeout` key
+in the configuration with a value in seconds.
 
 You must also tell `Plug.Session` that you use this store:
 
@@ -61,6 +64,6 @@ Before contributing to this project, please read the
 
 ## License
 
-Copyright © 2017 Jean-Philippe Cugnet
+Copyright © 2017-2018 Jean-Philippe Cugnet
 
 This project is licensed under the [MIT license](LICENSE).
