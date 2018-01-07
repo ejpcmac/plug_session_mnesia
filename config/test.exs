@@ -7,4 +7,5 @@ config :logger, level: :warn
 config :plug_session_mnesia,
   table: :session,
   max_age: 3600,
-  cleaner_timeout: 3600   # It should never trigger
+  # It should never trigger
+  cleaner_timeout: 3600

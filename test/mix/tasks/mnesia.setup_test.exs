@@ -27,7 +27,7 @@ defmodule Mix.Tasks.Session.SetupTest do
 
     test "prints an error message if a different table already exists with the
           same name" do
-      :mnesia.create_table(@table, [attributes: [:id, :data]])
+      :mnesia.create_table(@table, attributes: [:id, :data])
       run([])
 
       assert_received {:mix_shell, :error, [msg]}

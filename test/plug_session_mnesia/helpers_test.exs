@@ -7,31 +7,32 @@ defmodule PlugSessionMnesia.HelpersTest do
 
   describe "setup!/0" do
     test "creates a Mnesia schema and table according to the configuration" do
-      assert :ok = Helpers.setup!
+      assert :ok = Helpers.setup!()
       assert {:aborted, {:already_exists, _}} = :mnesia.create_table(@table, [])
+
       assert :mnesia.table_info(@table, :attributes) ==
-        [:sid, :data, :timestamp]
+               [:sid, :data, :timestamp]
     end
 
     test "raises if the table name is not provided in the configuration" do
       Application.delete_env(@app, :table)
 
       assert_raise PlugSessionMnesia.TableNotDefined, fn ->
-        Helpers.setup!
+        Helpers.setup!()
       end
     end
 
     test "raises if a different table already exists with the same name" do
-      :mnesia.create_table(@table, [attributes: [:id, :data]])
+      :mnesia.create_table(@table, attributes: [:id, :data])
 
       assert_raise PlugSessionMnesia.TableExists, fn ->
-        Helpers.setup!
+        Helpers.setup!()
       end
     end
 
     test "does nothing if the table already exists" do
-      :mnesia.create_table(@table, [attributes: [:sid, :data, :timestamp]])
-      assert :ok = Helpers.setup!
+      :mnesia.create_table(@table, attributes: [:sid, :data, :timestamp])
+      assert :ok = Helpers.setup!()
     end
   end
 
@@ -39,23 +40,23 @@ defmodule PlugSessionMnesia.HelpersTest do
     test "creates a Mnesia schema and table and returns :ok if it’s all good" do
       assert :ok = Helpers.setup(@table)
       assert {:aborted, {:already_exists, _}} = :mnesia.create_table(@table, [])
+
       assert :mnesia.table_info(@table, :attributes) ==
-        [:sid, :data, :timestamp]
+               [:sid, :data, :timestamp]
     end
 
     test "can create a persistent table" do
       filename = Atom.to_string(@table) <> ".DCD"
       assert :ok = Helpers.setup(@table, :persistent)
-      assert "Mnesia.nonode@nohost" |> Path.join(filename) |> File.exists?
+      assert "Mnesia.nonode@nohost" |> Path.join(filename) |> File.exists?()
     end
 
     test "can create a volatile table" do
       assert :ok = Helpers.setup(@table, :volatile)
-      assert not (
-        "Mnesia.nonode@nohost"
-        |> Path.join("test.DCD")
-        |> File.exists?
-      )
+
+      assert not ("Mnesia.nonode@nohost"
+                  |> Path.join("test.DCD")
+                  |> File.exists?())
     end
 
     test "works if a persistent schema already exists" do

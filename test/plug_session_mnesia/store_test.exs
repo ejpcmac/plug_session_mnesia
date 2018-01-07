@@ -35,12 +35,23 @@ defmodule PlugSessionMnesia.StoreTest do
       assert get(nil, @sid, @table) == {@sid, @data}
     end
 
-    test "updates the access timestamp" do
+    test "updates the timestamp by default" do
       {_, _, _, timestamp} = session_fixture()
       get(nil, @sid, @table)
       [{_, _, _, new_timestamp}] = lookup_session()
 
       assert new_timestamp != timestamp
+    end
+
+    test "does not update the timestamp if timestamp is set to :fixed" do
+      Application.put_env(@app, :timestamp, :fixed)
+      on_exit fn -> Application.delete_env(@app, :timestamp) end
+
+      {_, _, _, timestamp} = session_fixture()
+      get(nil, @sid, @table)
+      [{_, _, _, new_timestamp}] = lookup_session()
+
+      assert new_timestamp == timestamp
     end
 
     test "returns a nil session if it does not exists in the store" do
@@ -61,6 +72,25 @@ defmodule PlugSessionMnesia.StoreTest do
       session_fixture()
       assert put(nil, @sid, @new_data, @table) == @sid
       assert [{_, @sid, @new_data, _}] = lookup_session()
+    end
+
+    test "updates the timestamp by default" do
+      {_, _, _, timestamp} = session_fixture()
+      put(nil, @sid, @new_data, @table)
+      [{_, _, _, new_timestamp}] = lookup_session()
+
+      assert new_timestamp != timestamp
+    end
+
+    test "does not update the timestamp if timestamp is set to :fixed" do
+      Application.put_env(@app, :timestamp, :fixed)
+      on_exit fn -> Application.delete_env(@app, :timestamp) end
+
+      {_, _, _, timestamp} = session_fixture()
+      put(nil, @sid, @new_data, @table)
+      [{_, _, _, new_timestamp}] = lookup_session()
+
+      assert new_timestamp == timestamp
     end
 
     test "creates a new session if the store if it does not exists" do

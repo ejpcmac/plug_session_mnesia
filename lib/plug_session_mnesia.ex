@@ -15,19 +15,22 @@ defmodule PlugSessionMnesia do
 
   To use it in your app, add this to your dependencies:
 
-      {:plug_session_mnesia, "~> #{Mix.Project.config[:version]}"}
+      {:plug_session_mnesia, "~> #{Mix.Project.config()[:version]}"}
 
   Then, add to your configuration:
 
       config :plug_session_mnesia,
         table: :session,
-        max_age: 86400
+        max_age: 86_400
 
   It will store the sessions in a Mnesia table named `session` and discard them
-  if they are inactive for more than 1 day. By default,
-  `PlugSessionMnesia.Cleaner` checks every minute for outdated sessions. You can
-  change this behaviour by setting the `:cleaner_timeout` key in the
-  configuration with a value in seconds.
+  if they are inactive for more than 1 day. You can also choose to discard
+  sessions after a given amount of time, regardless they have been active or
+  not. To do this, simply add `timestamp: :fixed` to the configuration.
+
+  By default, `PlugSessionMnesia.Cleaner` checks every minute for outdated
+  sessions. You can change this behaviour by setting the `:cleaner_timeout` key
+  in the configuration with a value in seconds.
 
   You must also tell `Plug.Session` that you use this store:
 

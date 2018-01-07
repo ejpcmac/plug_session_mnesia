@@ -5,7 +5,7 @@ defmodule PlugSessionMnesia.IntegrationTest do
   @opts [
     key: "_test_key",
     store: PlugSessionMnesia.Store,
-    table: :session_test,
+    table: :session_test
   ]
 
   setup [:reset_mnesia_table]
@@ -13,8 +13,8 @@ defmodule PlugSessionMnesia.IntegrationTest do
   test "session creation works" do
     conn =
       build_conn()
-      |> init_and_fetch_session
-      |> endpoint
+      |> init_and_fetch_session()
+      |> endpoint()
 
     assert conn.assigns[:session] == %{}
   end
@@ -25,8 +25,8 @@ defmodule PlugSessionMnesia.IntegrationTest do
     conn =
       build_conn()
       |> put_resp_cookie("_test_key", @sid)
-      |> init_and_fetch_session
-      |> endpoint
+      |> init_and_fetch_session()
+      |> endpoint()
 
     assert conn.assigns[:session] == @data
   end
@@ -37,9 +37,9 @@ defmodule PlugSessionMnesia.IntegrationTest do
     conn =
       build_conn()
       |> put_resp_cookie("_test_key", @sid)
-      |> init_and_fetch_session
+      |> init_and_fetch_session()
       |> put_session(:test, 123)
-      |> endpoint
+      |> endpoint()
 
     assert %{"test" => 123} = conn.assigns[:session]
     assert [{_, _, %{"test" => 123}, _}] = lookup_session()
@@ -50,9 +50,9 @@ defmodule PlugSessionMnesia.IntegrationTest do
 
     build_conn()
     |> put_resp_cookie("_test_key", @sid)
-    |> init_and_fetch_session
+    |> init_and_fetch_session()
     |> configure_session(drop: true)
-    |> endpoint
+    |> endpoint()
 
     assert lookup_session() == []
   end
@@ -66,13 +66,13 @@ defmodule PlugSessionMnesia.IntegrationTest do
   defp init_and_fetch_session(conn) do
     conn
     |> Plug.Session.call(Plug.Session.init(@opts))
-    |> fetch_session
+    |> fetch_session()
   end
 
   defp endpoint(conn) do
     conn
     |> assign(:session, conn.private.plug_session)
     |> resp(200, "OK")
-    |> send_resp
+    |> send_resp()
   end
 end
