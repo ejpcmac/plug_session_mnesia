@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.1.1-dev
+## v0.1.1
 
 * Add the ability not to update timestamps
 
