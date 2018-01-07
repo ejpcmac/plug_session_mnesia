@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.1-dev
+
+* Add the ability not to update timestamps
+
 ## v0.1.0
 
 * Add a session store using Mnesia

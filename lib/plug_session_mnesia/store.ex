@@ -35,7 +35,12 @@ defmodule PlugSessionMnesia.Store do
       {sid :: String.t, data :: map, timestamp :: integer}
 
   The timestamp is updated on access to the session and is used by
-  `PlugSessionMnesia.Cleaner` to check if the session is still active.
+  `PlugSessionMnesia.Cleaner` to check if the session is still active. If you
+  want to delete a session on a fixed amount of time after its creation,
+  regardless its activity, you can disable the timestamp update by configuring
+  the application:
+
+      config :plug_session_mnesia, timestamp: :fixed
   """
 
   @behaviour Plug.Session.Store
@@ -56,7 +61,9 @@ defmodule PlugSessionMnesia.Store do
   def get(_conn, sid, table) do
     case lookup_session!(table, sid) do
       [{^table, ^sid, data, _timestamp}] ->
-        put_session!(table, sid, data)
+        unless Application.get_env(:plug_session_mnesia, :timestamp) == :fixed,
+          do: put_session!(table, sid, data, System.os_time())
+
         {sid, data}
 
       _ ->
@@ -68,7 +75,12 @@ defmodule PlugSessionMnesia.Store do
   def put(_conn, nil, data, table), do: put_new(table, data)
 
   def put(_conn, sid, data, table) do
-    put_session!(table, sid, data)
+    timestamp =
+      if Application.get_env(:plug_session_mnesia, :timestamp) == :fixed,
+        do: table |> lookup_session!(sid) |> Enum.at(0) |> elem(3),
+        else: System.os_time()
+
+    put_session!(table, sid, data, timestamp)
     sid
   end
 
@@ -99,10 +111,10 @@ defmodule PlugSessionMnesia.Store do
     end
   end
 
-  @spec put_session!(atom(), String.t(), map()) :: nil
-  defp put_session!(table, sid, data) do
+  @spec put_session!(atom(), String.t(), map(), integer()) :: nil
+  defp put_session!(table, sid, data, timestamp) do
     t = fn ->
-      :mnesia.write({table, sid, data, System.os_time()})
+      :mnesia.write({table, sid, data, timestamp})
     end
 
     case :mnesia.transaction(t) do
@@ -117,7 +129,7 @@ defmodule PlugSessionMnesia.Store do
     sid = Base.encode64(:crypto.strong_rand_bytes(96))
 
     if lookup_session!(table, sid) == [] do
-      put_session!(table, sid, data)
+      put_session!(table, sid, data, System.os_time())
       sid
     else
       put_new(table, data, counter + 1)
