@@ -19,8 +19,8 @@ defmodule PlugSessionMnesia.Cleaner do
 
   Returns `{:error, :bad_configuration}` otherwise.
   """
-  @spec start_link :: GenServer.on_start
-  @spec start_link(term) :: GenServer.on_start
+  @spec start_link :: GenServer.on_start()
+  @spec start_link(term()) :: GenServer.on_start()
   def start_link(_args \\ nil) do
     with {:ok, table} <- Application.fetch_env(@app, :table),
          {:ok, max_age} <- Application.fetch_env(@app, :max_age) do
@@ -57,31 +57,34 @@ defmodule PlugSessionMnesia.Cleaner do
       iex> PlugSessionMnesia.clean_sessions(:session, 86400)
       :ok
   """
-  @spec clean_sessions(atom, pos_integer) :: :ok | {:error | :aborted, term}
+  @spec clean_sessions(atom(), pos_integer()) ::
+          :ok | {:error | :aborted, term()}
+
   def clean_sessions(table, max_age) do
     oldest_timestamp =
-      System.os_time - System.convert_time_unit(max_age, :seconds, :native)
+      System.os_time() - System.convert_time_unit(max_age, :seconds, :native)
 
     delete_old_sessions = fn ->
       old_sids =
-        :mnesia.select(table, [{
-          {table, :"$1", :_, :"$3"},
-          [{:<, :"$3", oldest_timestamp}],
-          [:"$1"]
-        }])
+        :mnesia.select(table, [
+          {
+            {table, :"$1", :_, :"$3"},
+            [{:<, :"$3", oldest_timestamp}],
+            [:"$1"]
+          }
+        ])
 
-      for sid <- old_sids,
-        do: :mnesia.delete({table, sid})
+      for sid <- old_sids, do: :mnesia.delete({table, sid})
     end
 
     case :mnesia.transaction(delete_old_sessions) do
-      {:atomic, _}  -> :ok
-      other         -> other
+      {:atomic, _} -> :ok
+      other -> other
     end
   end
 
-  @spec schedule_work(non_neg_integer) :: reference
+  @spec schedule_work(non_neg_integer()) :: reference()
   defp schedule_work(timeout) do
-    Process.send_after self(), :work, timeout
+    Process.send_after(self(), :work, timeout)
   end
 end

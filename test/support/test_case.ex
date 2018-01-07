@@ -18,11 +18,10 @@ defmodule PlugSessionMnesia.TestCase do
       defp reset_mnesia_table(_attrs) do
         case :mnesia.clear_table(@table) do
           {:aborted, {:no_exists, _}} ->
-            :mnesia.create_table(@table, [
-              attributes: [:sid, :data, :timestamp]
-            ])
+            :mnesia.create_table(@table, attributes: [:sid, :data, :timestamp])
 
-          ok -> ok
+          ok ->
+            ok
         end
 
         :ok
@@ -39,14 +38,14 @@ defmodule PlugSessionMnesia.TestCase do
       end
 
       defp reset_mnesia do
-        :mnesia.stop
+        :mnesia.stop()
         :ok = :mnesia.delete_schema([node()])
         File.rm_rf("Mnesia.nonode@nohost")
-        :mnesia.start
+        :mnesia.start()
       end
 
       defp session_fixture do
-        session = {@table, @sid, @data, System.os_time}
+        session = {@table, @sid, @data, System.os_time()}
         :ok = :mnesia.dirty_write(session)
         session
       end

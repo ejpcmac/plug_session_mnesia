@@ -15,7 +15,7 @@ defmodule PlugSessionMnesia do
 
   To use it in your app, add this to your dependencies:
 
-      {:plug_session_mnesia, "~> #{Mix.Project.config[:version]}"}
+      {:plug_session_mnesia, "~> #{Mix.Project.config()[:version]}"}
 
   Then, add to your configuration:
 

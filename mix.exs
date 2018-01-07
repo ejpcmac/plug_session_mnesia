@@ -9,31 +9,29 @@ defmodule PlugSessionMnesia.Mixfile do
       app: :plug_session_mnesia,
       version: @version,
       elixir: "~> 1.5",
-      elixirc_paths: elixirc_paths(Mix.env),
-      start_permanent: Mix.env == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
+      start_permanent: Mix.env() == :prod,
       deps: deps(),
       dialyzer: [
         plt_add_deps: :transitive,
         flags: [:unmatched_returns, :error_handling, :race_conditions],
-        ignore_warnings: ".dialyzer_ignore",
+        ignore_warnings: ".dialyzer_ignore"
       ],
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
-        "coveralls": :test,
+        coveralls: :test,
         "coveralls.detail": :test,
-        "coveralls.html": :test,
+        "coveralls.html": :test
       ],
-
       docs: [
         main: "PlugSessionMnesia",
         source_url: @repo_url,
-        source_ref: "v#{@version}",
+        source_ref: "v#{@version}"
       ],
-
       package: package(),
       description: """
       An application for storing and managing Plug sessions with Mnesia.
-      """,
+      """
     ]
   end
 
@@ -44,9 +42,9 @@ defmodule PlugSessionMnesia.Mixfile do
     ]
   end
 
-   # Specifies which paths to compile per environment.
-   defp elixirc_paths(:test), do: ["lib", "test/support"]
-   defp elixirc_paths(_),     do: ["lib"]
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   defp deps do
     [
@@ -61,7 +59,7 @@ defmodule PlugSessionMnesia.Mixfile do
       {:plug, "~> 1.4", optional: true},
 
       # Documentation dependencies
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 
@@ -69,7 +67,7 @@ defmodule PlugSessionMnesia.Mixfile do
     [
       maintainers: ["Jean-Philippe Cugnet"],
       licenses: ["MIT"],
-      links: %{"GitHub" => @repo_url},
+      links: %{"GitHub" => @repo_url}
     ]
   end
 end

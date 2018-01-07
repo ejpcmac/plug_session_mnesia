@@ -66,6 +66,7 @@ defmodule PlugSessionMnesia.Store do
 
   @impl true
   def put(_conn, nil, data, table), do: put_new(table, data)
+
   def put(_conn, sid, data, table) do
     put_session!(table, sid, data)
     sid
@@ -83,7 +84,10 @@ defmodule PlugSessionMnesia.Store do
     end
   end
 
-  @spec lookup_session!(atom, String.t) :: [{atom, String.t, map, integer}]
+  @spec lookup_session!(atom(), String.t()) :: [
+          {atom(), String.t(), map(), integer()}
+        ]
+
   defp lookup_session!(table, sid) do
     t = fn ->
       :mnesia.read({table, sid})
@@ -95,10 +99,10 @@ defmodule PlugSessionMnesia.Store do
     end
   end
 
-  @spec put_session!(atom, String.t, map) :: nil
+  @spec put_session!(atom(), String.t(), map()) :: nil
   defp put_session!(table, sid, data) do
     t = fn ->
-      :mnesia.write({table, sid, data, System.os_time})
+      :mnesia.write({table, sid, data, System.os_time()})
     end
 
     case :mnesia.transaction(t) do
@@ -107,10 +111,11 @@ defmodule PlugSessionMnesia.Store do
     end
   end
 
-  @spec put_new(atom, map) :: String.t
-  @spec put_new(atom, map, non_neg_integer) :: String.t
+  @spec put_new(atom(), map()) :: String.t()
+  @spec put_new(atom(), map(), non_neg_integer()) :: String.t()
   defp put_new(table, data, counter \\ 0) when counter < @max_tries do
     sid = Base.encode64(:crypto.strong_rand_bytes(96))
+
     if lookup_session!(table, sid) == [] do
       put_session!(table, sid, data)
       sid

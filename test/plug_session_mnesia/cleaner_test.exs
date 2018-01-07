@@ -10,21 +10,21 @@ defmodule PlugSessionMnesia.CleanerTest do
       Application.put_env(@app, :table, @table)
       Application.put_env(@app, :max_age, 1)
 
-      assert {:ok, _} = Cleaner.start_link
+      assert {:ok, _} = Cleaner.start_link()
     end
 
     test "fails with an error if the Mnesia table is not provided in the
           configuration" do
       Application.delete_env(@app, :table)
       Application.put_env(@app, :max_age, 1)
-      assert {:error, :bad_configuration} = Cleaner.start_link
+      assert {:error, :bad_configuration} = Cleaner.start_link()
     end
 
     test "fails with an error if the maximum session age is not provided in the
           configuration" do
       Application.put_env(@app, :table, @table)
       Application.delete_env(@app, :max_age)
-      assert {:error, :bad_configuration} = Cleaner.start_link
+      assert {:error, :bad_configuration} = Cleaner.start_link()
     end
   end
 
@@ -32,7 +32,7 @@ defmodule PlugSessionMnesia.CleanerTest do
     setup [:reset_mnesia_table]
 
     test "cleans old sessions" do
-      now = System.os_time
+      now = System.os_time()
       one_sec_ago = now - System.convert_time_unit(1, :seconds, :native)
       five_sec_ago = now - System.convert_time_unit(5, :seconds, :native)
       session_a = {@table, "session_a", @data, five_sec_ago}
@@ -59,13 +59,15 @@ defmodule PlugSessionMnesia.CleanerTest do
       Application.put_env(@app, :max_age, 1)
       Application.put_env(@app, :cleaner_timeout, 1)
 
-      now = System.os_time
+      now = System.os_time()
       two_sec_ago = now - System.convert_time_unit(2, :seconds, :native)
       old_session = {@table, "old_session", @data, two_sec_ago}
       :ok = :mnesia.dirty_write(old_session)
 
-      assert {:ok, _} = Cleaner.start_link
-      Process.sleep(1100)   # Wait for the cleaning to trigger
+      assert {:ok, _} = Cleaner.start_link()
+
+      # Wait for the cleaning to trigger
+      Process.sleep(1100)
 
       assert :mnesia.dirty_match_object({@table, :_, :_, :_}) == []
     end
