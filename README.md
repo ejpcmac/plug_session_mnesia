@@ -18,7 +18,7 @@ feature.
 To use it in your app, add this to your dependencies:
 
 ```elixir
-{:plug_session_mnesia, "~> 0.1.0"}
+{:plug_session_mnesia, "~> 0.1.1"}
 ```
 
 Then, add to your configuration:
