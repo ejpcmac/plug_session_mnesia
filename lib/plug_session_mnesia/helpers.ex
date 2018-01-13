@@ -127,6 +127,7 @@ defmodule PlugSessionMnesia.Helpers do
 
     table_def = [
       attributes: [:sid, :data, :timestamp],
+      index: [:timestamp],
       disc_copies: disc_copies
     ]
 
