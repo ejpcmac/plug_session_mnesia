@@ -1,7 +1,7 @@
 defmodule PlugSessionMnesia.Mixfile do
   use Mix.Project
 
-  @version "0.1.2-dev"
+  @version "0.1.2"
   @repo_url "https://github.com/ejpcmac/plug_session_mnesia"
 
   def project do
