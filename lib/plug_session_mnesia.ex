@@ -56,7 +56,10 @@ defmodule PlugSessionMnesia do
 
   @impl true
   def start(_type, _args) do
-    opts = [strategy: :one_for_one, name: PlugSessionMnesia.Supervisor]
-    Supervisor.start_link([Cleaner], opts)
+    Supervisor.start_link(
+      [Cleaner],
+      strategy: :one_for_one,
+      name: PlugSessionMnesia.Supervisor
+    )
   end
 end

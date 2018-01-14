@@ -15,7 +15,7 @@ defmodule PlugSessionMnesia.Cleaner do
 
       config :plug_session_mnesia,
         table: :session,
-        max_age: 86400
+        max_age: 86_400
 
   Returns `{:error, :bad_configuration}` otherwise.
   """

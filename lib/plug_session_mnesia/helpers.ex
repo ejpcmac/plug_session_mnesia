@@ -7,16 +7,23 @@ defmodule PlugSessionMnesia.Helpers do
   features like distribution, you should create the table yourself.
   """
 
+  alias PlugSessionMnesia.TableNotDefined
+  alias PlugSessionMnesia.TableExists
+
   @typep persistence() :: :persistent | :volatile
   @typep return_value() :: :ok | {:error | :abort, term()}
+
+  table_config = """
+  For this function to work, `:table` must be set in your `config.exs`:
+
+      config :plug_session_mnesia,
+        table: :session,
+  """
 
   @doc """
   Sets up the Mnesia table for session storage according to the configuration.
 
-  For this function to work, `:table` must be set in your `config.exs`:
-
-      config :plug_session_mnesia,
-        table: :session
+  #{table_config}
 
   It then creates a Mnesia table with copies in RAM and on disk, so that
   sessions are persistent accross application reboots. For more information
@@ -28,6 +35,26 @@ defmodule PlugSessionMnesia.Helpers do
   @spec setup! :: :ok
   def setup! do
     fetch_table_name!() |> do_setup!()
+  end
+
+  @doc """
+  Clears all sessions from the Mnesia table given in the configuration.
+
+  #{table_config}
+  """
+  @spec clear! :: :ok
+  def clear! do
+    fetch_table_name!() |> clear()
+  end
+
+  @doc """
+  Drops the Mnesia table given in the configuration.
+
+  #{table_config}
+  """
+  @spec drop! :: :ok
+  def drop! do
+    fetch_table_name!() |> drop()
   end
 
   @doc """
@@ -69,6 +96,24 @@ defmodule PlugSessionMnesia.Helpers do
     |> create_table(table)
   end
 
+  @doc """
+  Clears all sessions from the `table`.
+  """
+  @spec clear(atom()) :: :ok
+  def clear(table) do
+    _ = :mnesia.clear_table(table)
+    :ok
+  end
+
+  @doc """
+  Drops the Mnesia `table`.
+  """
+  @spec drop(atom()) :: :ok
+  def drop(table) do
+    _ = :mnesia.delete_table(table)
+    :ok
+  end
+
   ##
   ## Private helpers
   ##
@@ -77,7 +122,7 @@ defmodule PlugSessionMnesia.Helpers do
   defp fetch_table_name! do
     case Application.fetch_env(:plug_session_mnesia, :table) do
       {:ok, table} -> table
-      :error -> raise PlugSessionMnesia.TableNotDefined
+      :error -> raise TableNotDefined
     end
   end
 
@@ -88,7 +133,7 @@ defmodule PlugSessionMnesia.Helpers do
         :ok
 
       {:error, :table_exists} ->
-        raise PlugSessionMnesia.TableExists, table: table
+        raise TableExists, table: table
     end
   end
 
@@ -127,6 +172,7 @@ defmodule PlugSessionMnesia.Helpers do
 
     table_def = [
       attributes: [:sid, :data, :timestamp],
+      index: [:timestamp],
       disc_copies: disc_copies
     ]
 

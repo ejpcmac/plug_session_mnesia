@@ -2,6 +2,8 @@ defmodule PlugSessionMnesia.IntegrationTest do
   use PlugSessionMnesia.TestCase
   use Plug.Test
 
+  alias Plug.Session
+
   @opts [
     key: "_test_key",
     store: PlugSessionMnesia.Store,
@@ -65,7 +67,7 @@ defmodule PlugSessionMnesia.IntegrationTest do
 
   defp init_and_fetch_session(conn) do
     conn
-    |> Plug.Session.call(Plug.Session.init(@opts))
+    |> Session.call(Session.init(@opts))
     |> fetch_session()
   end
 

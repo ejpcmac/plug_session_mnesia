@@ -5,6 +5,9 @@ defmodule Mix.Tasks.Session.SetupTest do
 
   import Mix.Tasks.Session.Setup
 
+  alias PlugSessionMnesia.TableNotDefined
+  alias PlugSessionMnesia.TableExists
+
   setup [:mnesia, :with_env]
 
   describe "run/1" do
@@ -22,7 +25,7 @@ defmodule Mix.Tasks.Session.SetupTest do
       run([])
 
       assert_received {:mix_shell, :error, [msg]}
-      assert msg =~ PlugSessionMnesia.TableNotDefined.message(nil)
+      assert msg =~ TableNotDefined.message(nil)
     end
 
     test "prints an error message if a different table already exists with the
@@ -31,7 +34,7 @@ defmodule Mix.Tasks.Session.SetupTest do
       run([])
 
       assert_received {:mix_shell, :error, [msg]}
-      assert msg =~ PlugSessionMnesia.TableExists.message(%{table: @table})
+      assert msg =~ TableExists.message(%{table: @table})
     end
   end
 end
