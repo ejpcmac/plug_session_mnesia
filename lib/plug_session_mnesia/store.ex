@@ -32,7 +32,7 @@ defmodule PlugSessionMnesia.Store do
   The data is stored in Mnesia in the following format, where `timestamp` is the
   OS UNIX time in the `:native` unit:
 
-      {sid :: String.t, data :: map, timestamp :: integer}
+      {sid :: String.t(), data :: map(), timestamp :: integer()}
 
   The timestamp is updated on access to the session and is used by
   `PlugSessionMnesia.Cleaner` to check if the session is still active. If you
