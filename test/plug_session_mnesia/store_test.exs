@@ -3,6 +3,9 @@ defmodule PlugSessionMnesia.StoreTest do
 
   import PlugSessionMnesia.Store
 
+  alias PlugSessionMnesia.TableNotDefined
+  alias PlugSessionMnesia.TableNotExists
+
   describe "init/1" do
     test "returns the configuration if it’s OK" do
       assert init(table: @table) == @table
@@ -11,7 +14,7 @@ defmodule PlugSessionMnesia.StoreTest do
     test "raises if the table is not provided as argument nor in the application
           environment" do
       Application.delete_env(@app, :table)
-      assert_raise PlugSessionMnesia.TableNotDefined, fn -> init([]) end
+      assert_raise TableNotDefined, fn -> init([]) end
     end
 
     test "can fetch the table from the application environment" do
@@ -59,7 +62,7 @@ defmodule PlugSessionMnesia.StoreTest do
     end
 
     test "raises if the table does not exists" do
-      assert_raise PlugSessionMnesia.TableNotExists, fn ->
+      assert_raise TableNotExists, fn ->
         get(nil, @sid, :unknown_table)
       end
     end
@@ -100,7 +103,7 @@ defmodule PlugSessionMnesia.StoreTest do
     end
 
     test "raises if the table does not exists" do
-      assert_raise PlugSessionMnesia.TableNotExists, fn ->
+      assert_raise TableNotExists, fn ->
         put(nil, @sid, @data, :unknown_table)
       end
     end
@@ -120,7 +123,7 @@ defmodule PlugSessionMnesia.StoreTest do
     end
 
     test "raises if the table does not exists" do
-      assert_raise PlugSessionMnesia.TableNotExists, fn ->
+      assert_raise TableNotExists, fn ->
         delete(nil, @sid, :unknown_table)
       end
     end

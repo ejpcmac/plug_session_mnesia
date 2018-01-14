@@ -7,6 +7,9 @@ defmodule PlugSessionMnesia.Helpers do
   features like distribution, you should create the table yourself.
   """
 
+  alias PlugSessionMnesia.TableNotDefined
+  alias PlugSessionMnesia.TableExists
+
   @typep persistence() :: :persistent | :volatile
   @typep return_value() :: :ok | {:error | :abort, term()}
 
@@ -77,7 +80,7 @@ defmodule PlugSessionMnesia.Helpers do
   defp fetch_table_name! do
     case Application.fetch_env(:plug_session_mnesia, :table) do
       {:ok, table} -> table
-      :error -> raise PlugSessionMnesia.TableNotDefined
+      :error -> raise TableNotDefined
     end
   end
 
@@ -88,7 +91,7 @@ defmodule PlugSessionMnesia.Helpers do
         :ok
 
       {:error, :table_exists} ->
-        raise PlugSessionMnesia.TableExists, table: table
+        raise TableExists, table: table
     end
   end
 

@@ -35,9 +35,13 @@ defmodule Mix.Tasks.Session.Setup do
   in the Erlang documentation.
   """
 
+  alias PlugSessionMnesia.Helpers
+  alias PlugSessionMnesia.TableNotDefined
+  alias PlugSessionMnesia.TableExists
+
   @spec run(OptionParser.argv()) :: boolean()
   def run(_argv) do
-    PlugSessionMnesia.Helpers.setup!()
+    Helpers.setup!()
     table = Application.fetch_env!(:plug_session_mnesia, :table)
 
     Mix.shell().info(
@@ -46,10 +50,7 @@ defmodule Mix.Tasks.Session.Setup do
         "session storage!"
     )
   rescue
-    e in PlugSessionMnesia.TableNotDefined ->
-      Mix.shell().error(PlugSessionMnesia.TableNotDefined.message(e))
-
-    e in PlugSessionMnesia.TableExists ->
-      Mix.shell().error(PlugSessionMnesia.TableExists.message(e))
+    e in TableNotDefined -> Mix.shell().error(TableNotDefined.message(e))
+    e in TableExists -> Mix.shell().error(TableExists.message(e))
   end
 end

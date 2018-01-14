@@ -45,13 +45,16 @@ defmodule PlugSessionMnesia.Store do
 
   @behaviour Plug.Session.Store
 
+  alias PlugSessionMnesia.TableNotDefined
+  alias PlugSessionMnesia.TableNotExists
+
   @max_tries 500
 
   @impl true
   def init(opts) do
     with :error <- Keyword.fetch(opts, :table),
          :error <- Application.fetch_env(:plug_session_mnesia, :table) do
-      raise PlugSessionMnesia.TableNotDefined
+      raise TableNotDefined
     else
       {:ok, table} -> table
     end
@@ -92,7 +95,7 @@ defmodule PlugSessionMnesia.Store do
 
     case :mnesia.transaction(t) do
       {:atomic, :ok} -> :ok
-      {:aborted, {:no_exists, _}} -> raise PlugSessionMnesia.TableNotExists
+      {:aborted, {:no_exists, _}} -> raise TableNotExists
     end
   end
 
@@ -107,7 +110,7 @@ defmodule PlugSessionMnesia.Store do
 
     case :mnesia.transaction(t) do
       {:atomic, session} -> session
-      {:aborted, {:no_exists, _}} -> raise PlugSessionMnesia.TableNotExists
+      {:aborted, {:no_exists, _}} -> raise TableNotExists
     end
   end
 
@@ -119,7 +122,7 @@ defmodule PlugSessionMnesia.Store do
 
     case :mnesia.transaction(t) do
       {:atomic, :ok} -> nil
-      {:aborted, {:no_exists, _}} -> raise PlugSessionMnesia.TableNotExists
+      {:aborted, {:no_exists, _}} -> raise TableNotExists
     end
   end
 

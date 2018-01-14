@@ -2,6 +2,8 @@ defmodule PlugSessionMnesia.HelpersTest do
   use PlugSessionMnesia.TestCase
 
   alias PlugSessionMnesia.Helpers
+  alias PlugSessionMnesia.TableNotDefined
+  alias PlugSessionMnesia.TableExists
 
   setup [:mnesia, :with_env]
 
@@ -17,7 +19,7 @@ defmodule PlugSessionMnesia.HelpersTest do
     test "raises if the table name is not provided in the configuration" do
       Application.delete_env(@app, :table)
 
-      assert_raise PlugSessionMnesia.TableNotDefined, fn ->
+      assert_raise TableNotDefined, fn ->
         Helpers.setup!()
       end
     end
@@ -25,7 +27,7 @@ defmodule PlugSessionMnesia.HelpersTest do
     test "raises if a different table already exists with the same name" do
       :mnesia.create_table(@table, attributes: [:id, :data])
 
-      assert_raise PlugSessionMnesia.TableExists, fn ->
+      assert_raise TableExists, fn ->
         Helpers.setup!()
       end
     end
