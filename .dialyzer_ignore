@@ -1,2 +1,4 @@
 :0: Unknown function 'Elixir.Mix':shell/0
 lib/mix/tasks/session.setup.ex:1: Callback info about the 'Elixir.Mix.Task' behaviour is not available
+lib/mix/tasks/session.clear.ex:1: Callback info about the 'Elixir.Mix.Task' behaviour is not available
+lib/mix/tasks/session.drop.ex:1: Callback info about the 'Elixir.Mix.Task' behaviour is not available
