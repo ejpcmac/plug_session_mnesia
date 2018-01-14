@@ -11,6 +11,7 @@ defmodule PlugSessionMnesia.TestCase do
     quote do
       @app :plug_session_mnesia
       @table :session_test
+      @attributes [:sid, :data, :timestamp]
       @sid "test_session"
       @data %{key: "value"}
       @new_data %{key: "new_value"}
@@ -18,7 +19,7 @@ defmodule PlugSessionMnesia.TestCase do
       defp reset_mnesia_table(_attrs) do
         case :mnesia.clear_table(@table) do
           {:aborted, {:no_exists, _}} ->
-            :mnesia.create_table(@table, attributes: [:sid, :data, :timestamp])
+            :mnesia.create_table(@table, attributes: @attributes)
 
           ok ->
             ok
@@ -29,12 +30,12 @@ defmodule PlugSessionMnesia.TestCase do
 
       defp mnesia(_attrs) do
         reset_mnesia()
-        on_exit fn -> reset_mnesia() end
+        on_exit(fn -> reset_mnesia() end)
       end
 
       defp with_env(_attrs) do
         Application.put_env(@app, :table, @table)
-        on_exit fn -> Application.delete_env(@app, :table) end
+        on_exit(fn -> Application.delete_env(@app, :table) end)
       end
 
       defp reset_mnesia do
