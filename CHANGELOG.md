@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.3
+
+* Fix the time units
+
 ## v0.1.2
 
 * Add an index on timestamp
