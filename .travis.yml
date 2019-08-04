@@ -1,0 +1,45 @@
+language: elixir
+elixir:
+  - 1.6
+  - 1.7
+  - 1.8
+  - 1.9
+otp_release:
+  - 19.3
+  - 20.3
+  - 21.2
+  - 22.0
+matrix:
+  exclude:
+    - elixir: 1.6
+      otp_release: 21.2
+    - elixir: 1.6
+      otp_release: 22.0
+    - elixir: 1.7
+      otp_release: 19.3
+    - elixir: 1.7
+      otp_release: 20.3
+    - elixir: 1.8
+      otp_release: 19.3
+    - elixir: 1.8
+      otp_release: 20.3
+    - elixir: 1.9
+      otp_release: 19.3
+    - elixir: 1.9
+      otp_release: 20.3
+env:
+  - PLT_DIR=$HOME/.plt
+before_script:
+  - mkdir -p $PLT_DIR
+  - mix deps.compile
+  - MIX_ENV=test mix deps.compile
+  - travis_wait mix dialyzer --plt
+script:
+  - mix compile --force --verbose --warnings-as-errors
+  - mix test --trace
+  - mix dialyzer --no-compile --no-check --halt-exit-status
+  - mix credo
+  - if [[ "$TRAVIS_ELIXIR_VERSION" == "1.9.1" ]]; then mix format --check-formatted; fi
+cache:
+  directories:
+    - $PLT_DIR
