@@ -62,7 +62,7 @@ defmodule PlugSessionMnesia.Cleaner do
 
   def clean_sessions(table, max_age) do
     oldest_timestamp =
-      System.os_time() - System.convert_time_unit(max_age, :seconds, :native)
+      System.os_time() - System.convert_time_unit(max_age, :second, :native)
 
     delete_old_sessions = fn ->
       old_sids =
