@@ -64,6 +64,6 @@ Before contributing to this project, please read the
 
 ## License
 
-Copyright © 2017-2018 Jean-Philippe Cugnet
+Copyright © 2017-2019 Jean-Philippe Cugnet and contributors
 
 This project is licensed under the [MIT license](LICENSE).
