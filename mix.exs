@@ -7,7 +7,7 @@ defmodule PlugSessionMnesia.Mixfile do
   def project do
     [
       app: :plug_session_mnesia,
-      version: @version <> dev(),
+      version: @version,
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
