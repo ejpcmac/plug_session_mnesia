@@ -36,8 +36,8 @@ defmodule Mix.Tasks.Session.Setup do
   """
 
   alias PlugSessionMnesia.Helpers
-  alias PlugSessionMnesia.TableNotDefined
   alias PlugSessionMnesia.TableExists
+  alias PlugSessionMnesia.TableNotDefined
 
   @spec run(OptionParser.argv()) :: boolean()
   def run(_argv) do
