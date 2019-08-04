@@ -7,8 +7,8 @@ defmodule PlugSessionMnesia.Helpers do
   features like distribution, you should create the table yourself.
   """
 
-  alias PlugSessionMnesia.TableNotDefined
   alias PlugSessionMnesia.TableExists
+  alias PlugSessionMnesia.TableNotDefined
 
   @typep persistence() :: :persistent | :volatile
   @typep return_value() :: :ok | {:error | :abort, term()}

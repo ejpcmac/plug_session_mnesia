@@ -48,7 +48,7 @@ defmodule PlugSessionMnesia.StoreTest do
 
     test "does not update the timestamp if timestamp is set to :fixed" do
       Application.put_env(@app, :timestamp, :fixed)
-      on_exit fn -> Application.delete_env(@app, :timestamp) end
+      on_exit(fn -> Application.delete_env(@app, :timestamp) end)
 
       {_, _, _, timestamp} = session_fixture()
       get(nil, @sid, @table)
@@ -87,7 +87,7 @@ defmodule PlugSessionMnesia.StoreTest do
 
     test "does not update the timestamp if timestamp is set to :fixed" do
       Application.put_env(@app, :timestamp, :fixed)
-      on_exit fn -> Application.delete_env(@app, :timestamp) end
+      on_exit(fn -> Application.delete_env(@app, :timestamp) end)
 
       {_, _, _, timestamp} = session_fixture()
       put(nil, @sid, @new_data, @table)

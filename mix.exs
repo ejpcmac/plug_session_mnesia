@@ -1,7 +1,7 @@
 defmodule PlugSessionMnesia.Mixfile do
   use Mix.Project
 
-  @version "0.1.2"
+  @version "0.1.3"
   @repo_url "https://github.com/ejpcmac/plug_session_mnesia"
 
   def project do
@@ -12,22 +12,20 @@ defmodule PlugSessionMnesia.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      dialyzer: [
-        plt_add_deps: :transitive,
-        flags: [:unmatched_returns, :error_handling, :race_conditions],
-        ignore_warnings: ".dialyzer_ignore"
-      ],
+
+      # Tools
+      dialyzer: dialyzer(),
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [
-        coveralls: :test,
-        "coveralls.detail": :test,
-        "coveralls.html": :test
-      ],
+      preferred_cli_env: cli_env(),
+
+      # Docs
       docs: [
         main: "PlugSessionMnesia",
         source_url: @repo_url,
         source_ref: "v#{@version}"
       ],
+
+      # Package
       package: package(),
       description: """
       An application for storing and managing Plug sessions with Mnesia.
@@ -49,17 +47,55 @@ defmodule PlugSessionMnesia.Mixfile do
   defp deps do
     [
       # Development and test dependencies
-      {:credo, "~> 0.8.8", only: [:dev, :test], runtime: false},
-      {:dialyxir, ">= 0.0.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.0", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0-rc", only: :dev, runtime: false},
       {:excoveralls, ">= 0.0.0", only: :test, runtime: false},
-      {:mix_test_watch, ">= 0.0.0", only: :dev, runtime: false},
+      {:mix_test_watch, ">= 0.0.0", only: :test, runtime: false},
       {:ex_unit_notifier, ">= 0.0.0", only: :test, runtime: false},
 
       # Project dependencies
       {:plug, "~> 1.4", optional: true},
 
       # Documentation dependencies
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.19", only: :docs, runtime: false}
+    ]
+  end
+
+  # Dialyzer configuration
+  defp dialyzer do
+    [
+      # Use a custom PLT directory for continuous integration caching.
+      plt_core_path: System.get_env("PLT_DIR"),
+      plt_file: plt_file(),
+      plt_add_deps: :transitive,
+      flags: [
+        :unmatched_returns,
+        :error_handling,
+        :race_conditions
+      ],
+      ignore_warnings: ".dialyzer_ignore"
+    ]
+  end
+
+  defp plt_file do
+    case System.get_env("PLT_DIR") do
+      nil -> nil
+      plt_dir -> {:no_warn, Path.join(plt_dir, "xgen.plt")}
+    end
+  end
+
+  defp cli_env do
+    [
+      # Run mix test.watch in `:test` env.
+      "test.watch": :test,
+
+      # Always run Coveralls Mix tasks in `:test` env.
+      coveralls: :test,
+      "coveralls.detail": :test,
+      "coveralls.html": :test,
+
+      # Use a custom env for docs.
+      docs: :docs
     ]
   end
 
@@ -69,5 +105,18 @@ defmodule PlugSessionMnesia.Mixfile do
       licenses: ["MIT"],
       links: %{"GitHub" => @repo_url}
     ]
+  end
+
+  # Helper to add a development revision to the version. Do NOT make a call to
+  # Git this way in a production release!!
+  def dev do
+    with {rev, 0} <-
+           System.cmd("git", ["rev-parse", "--short", "HEAD"],
+             stderr_to_stdout: true
+           ) do
+      "-dev+" <> String.trim(rev)
+    else
+      _ -> "-dev"
+    end
   end
 end

@@ -5,8 +5,8 @@ defmodule Mix.Tasks.Session.SetupTest do
 
   import Mix.Tasks.Session.Setup
 
-  alias PlugSessionMnesia.TableNotDefined
   alias PlugSessionMnesia.TableExists
+  alias PlugSessionMnesia.TableNotDefined
 
   setup [:mnesia, :with_env]
 

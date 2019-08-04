@@ -2,8 +2,8 @@ defmodule PlugSessionMnesia.HelpersTest do
   use PlugSessionMnesia.TestCase
 
   alias PlugSessionMnesia.Helpers
-  alias PlugSessionMnesia.TableNotDefined
   alias PlugSessionMnesia.TableExists
+  alias PlugSessionMnesia.TableNotDefined
 
   setup [:mnesia, :with_env]
 

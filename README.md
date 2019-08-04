@@ -1,5 +1,6 @@
 # plug_session_mnesia
 
+[![Build Status](https://travis-ci.com/ejpcmac/plug_session_mnesia.svg?branch=develop)](https://travis-ci.com/ejpcmac/plug_session_mnesia)
 [![hex.pm version](http://img.shields.io/hexpm/v/plug_session_mnesia.svg?style=flat)](https://hex.pm/packages/plug_session_mnesia)
 
 An application for storing and managing Plug sessions with Mnesia.
@@ -18,7 +19,7 @@ feature.
 To use it in your app, add this to your dependencies:
 
 ```elixir
-{:plug_session_mnesia, "~> 0.1.2"}
+{:plug_session_mnesia, "~> 0.1.3"}
 ```
 
 Then, add to your configuration:
@@ -64,6 +65,6 @@ Before contributing to this project, please read the
 
 ## License
 
-Copyright © 2017-2018 Jean-Philippe Cugnet
+Copyright © 2017-2019 Jean-Philippe Cugnet and contributors
 
 This project is licensed under the [MIT license](LICENSE).
