@@ -1,5 +1,6 @@
 # plug_session_mnesia
 
+[![Build Status](https://travis-ci.com/ejpcmac/plug_session_mnesia.svg?branch=develop)](https://travis-ci.com/ejpcmac/plug_session_mnesia)
 [![hex.pm version](http://img.shields.io/hexpm/v/plug_session_mnesia.svg?style=flat)](https://hex.pm/packages/plug_session_mnesia)
 
 An application for storing and managing Plug sessions with Mnesia.
